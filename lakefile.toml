@@ -1,0 +1,33 @@
+name = "jaeger_flows"
+version = "0.1.0"
+defaultTargets = ["TreePackingLib", "Euler", "JaegerLib", "Challenge", "Solution"]
+requiresModuleSystem = true
+
+[leanOptions]
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.35.0-rc3"
+
+[[lean_lib]]
+name = "TreePackingLib"
+globs = ["TreePackingLib.+"]
+
+[[lean_lib]]
+name = "Euler"
+globs = ["Euler.+"]
+
+[[lean_lib]]
+name = "JaegerLib"
+globs = ["JaegerLib.+"]
+
+[[lean_lib]]
+name = "Challenge"
+roots = ["Challenge"]
+
+[[lean_lib]]
+name = "Solution"
+roots = ["Solution"]

@@ -1,0 +1,16 @@
+{
+  "challenge_module": "Challenge",
+  "solution_module": "Solution",
+  "theorem_names": [
+    "JaegerFlow.exists_even_cover_of_trees",
+    "JaegerFlow.exists_flow_of_trees",
+    "JaegerFlow.jaeger_four_flow"
+  ],
+  "definition_names": [],
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "enable_nanoda": true
+}

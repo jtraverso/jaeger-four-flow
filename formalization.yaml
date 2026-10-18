@@ -1,0 +1,132 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Jaeger's 4-flow theorem"
+  description: >-
+    A Lean 4 / Mathlib formalization of Jaeger's 4-flow theorem: every finite 4-edge-connected
+    simple graph has a nowhere-zero integer 4-flow, i.e. an antisymmetric function on darts with
+    values in {±1, ±2, ±3} that is conserved at every vertex. Also proved: a graph with two
+    edge-disjoint spanning trees has its edges covered by two even subgraphs (a nowhere-zero
+    ℤ₂ × ℤ₂-flow) and has a nowhere-zero integer 4-flow. Mathlib has no flows. Jaeger's 8-flow
+    theorem for bridgeless graphs is not included.
+  authors:
+    - "Juan Pablo Traverso Gianini"
+  license: "Apache-2.0"
+  responsible_maintainers:
+    - "Juan Pablo Traverso Gianini"
+
+classification:
+  arxiv: ["math.CO"]
+  msc2020: ["05C21", "05C40"]
+
+sources:
+  - title: "Flows and generalized coloring theorems in graphs"
+    authors:
+      - "F. Jaeger"
+    id: "doi:10.1016/0095-8956(79)90057-1"
+    type: "paper"
+    location: "Journal of Combinatorial Theory, Series B 26 (1979), 205–216"
+    relationship: "formalizes"
+    note: >-
+      The 4-flow theorem for 4-edge-connected graphs, via two edge-disjoint spanning trees and a
+      cover by two even subgraphs. The 8-flow theorem of the same paper is not formalized.
+    license: "all rights reserved"
+    author_endorsement: "n/a"
+
+related_formalizations:
+  - id: "PALOMAR-2026-10-17-000008 (jtraverso/nash-williams-trees)"
+    relationship: "builds-on"
+    note: >-
+      The same author's Nash-Williams–Tutte tree packing entry; its library `TreePackingLib/`
+      (commit 101e488) is included unchanged and gives the two edge-disjoint spanning trees.
+  - id: "PALOMAR-2026-10-16-000016 (jtraverso/euler-petersen)"
+    relationship: "builds-on"
+    note: >-
+      The same author's Euler / Petersen entry; its files `Euler/Basic.lean`, `Euler/Trail.lean`
+      and `Euler/Orientation.lean` (commit 02c3f1a) are included unchanged and give balanced
+      orientations of even graphs.
+
+status:
+  scope: "Proved for every finite simple graph (vertex types in any universe)."
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: []
+
+automation:
+  methods:
+    - method: "autonomous"
+      models: ["Aristotle (Harmonic)"]
+      framework: "Aristotle CLI"
+      tool_setup: >-
+        Produced all proofs in one run from the formal statements and a proof plan (T-joins in
+        trees, even cover, flow from balanced orientations, tree packing) on top of the existing
+        `TreePackingLib` and `Euler` libraries; the return was audited (statements, definition and
+        headers unchanged, libraries unchanged, no added axioms) and rebuilt locally.
+      cost:
+        wall_time: "about two hours"
+        spend_usd: "not tracked"
+        hardware: "API-only"
+      prompting_notes: "Formal statements and proof plan supplied."
+    - method: "agent"
+      models: ["Claude Opus 5.5"]
+      framework: "Claude Code (Anthropic)"
+      tool_setup: >-
+        Statement design (the even-cover statement was checked by brute force on all
+        4-edge-connected graphs with 5, 6 and 7 vertices), proof plan, integration and review of
+        the Aristotle return, and the Palomar packaging, checked with `lake build` and
+        `#print axioms` (Lean v4.35.0-rc3, Mathlib c55e6e786f49471c72fbddbec5415808896aec1e).
+      cost:
+        wall_time: "about one hour"
+        spend_usd: "subscription-based"
+        hardware: "local machine"
+      prompting_notes: "Natural-language instructions in Spanish, directed by the author."
+  spend_usd: "subscription-based"
+  notes: >-
+    The result was chosen by the human author; the Lean proofs are AI-generated and mechanically
+    verified (no `sorry`, axioms limited to propext, Classical.choice and Quot.sound, identical
+    elaborated types for the Challenge/Solution pair).
+
+fidelity:
+  divergences: >-
+    Flows are functions on Mathlib's darts `G.Dart` (both orientations of every edge), required
+    to be antisymmetric (`φ d.symm = −φ d`), nonzero with absolute value less than k on every
+    dart, and conserved at every vertex (the sum over darts leaving v is zero); this is equivalent
+    to the usual definition with a fixed orientation. The ℤ₂ × ℤ₂ form is stated as a cover of the
+    edge set by two subgraphs with all degrees even (the standard equivalence with nowhere-zero
+    ℤ₂²-flows is not formalized). 4-edge-connectivity is `SimpleGraph.IsEdgeConnected 4`; for an
+    empty or one-vertex graph the conclusions hold trivially. Edge-disjointness of the trees is
+    `Disjoint T₁ T₂` in the lattice of simple graphs.
+
+review:
+  status: "agent-reviewed"
+  reviewers:
+    - "Claude Opus 5.5 (AI agent in Claude Code, acting for the author)"
+  notes: >-
+    Agent review by Claude Opus 5.5, distinct from the mechanical verification: the agent
+    compared the statements with Jaeger's theorem, checked the definition of nowhere-zero flows
+    on darts, checked that the Aristotle return left the statements, the definition, every header
+    and the reused libraries unchanged, and confirmed by `lake build`, `#print axioms` and a
+    comparison of the fully elaborated Challenge and Solution types that the proofs use no
+    `sorry` and only propext, Classical.choice and Quot.sound. The author directed the work and
+    approved the statements. No independent human mathematical review has been performed. The
+    result is classical; no mathematical novelty is claimed.
+
+alignment:
+  namespace: "JaegerFlow"
+  statements:
+    - source: "Two edge-disjoint spanning trees give a cover by two even subgraphs"
+      lean: "JaegerFlow.exists_even_cover_of_trees"
+      module: "Challenge"
+      status: "proved"
+    - source: "Two edge-disjoint spanning trees give a nowhere-zero 4-flow"
+      lean: "JaegerFlow.exists_flow_of_trees"
+      module: "Challenge"
+      status: "proved"
+    - source: "Jaeger (1979): every 4-edge-connected graph has a nowhere-zero 4-flow"
+      lean: "JaegerFlow.jaeger_four_flow"
+      module: "Challenge"
+      status: "proved"
+
+acknowledgements: >-
+  Mathlib and the Lean community; Harmonic's Aristotle.
