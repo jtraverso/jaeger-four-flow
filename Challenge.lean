@@ -25,6 +25,16 @@ flow is conserved at every vertex: `∑_{d.fst = v} φ d = 0`.
 Reference: F. Jaeger, *Flows and generalized coloring theorems in graphs*, J. Combin. Theory
 Ser. B 26 (1979) 205–216.
 
+**Version 2: Jaeger's 8-flow theorem.** For a finite simple graph `G` with no bridge (Mathlib's
+`SimpleGraph.IsBridge`):
+
+* `EightFlowTheorem.exists_even_cover_three`: the edges of `G` are covered by three subgraphs in
+  which every vertex has even degree.
+* `EightFlowTheorem.jaeger_eight_flow`: **Jaeger's 8-flow theorem (Jaeger 1979; Kilpatrick
+  1975).** `G` has a nowhere-zero integer 8-flow.
+* `EightFlowTheorem.not_isBridge_of_flow`: conversely, a graph with a nowhere-zero flow has no
+  bridge.
+
 The Mathlib definitions used in these statements are reproduced verbatim, with file and line at the
 pinned Mathlib revision, in `MATHLIB_DEFINITIONS.md` at the root of this repository.
 -/
@@ -68,3 +78,32 @@ theorem jaeger_four_flow (G : SimpleGraph V) [DecidableRel G.Adj] (hG : G.IsEdge
   sorry
 
 end JaegerFlow
+
+/-! ### Jaeger's 8-flow theorem (version 2) -/
+
+namespace EightFlowTheorem
+
+open JaegerFlow
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+omit [DecidableEq V] in
+/-- A bridgeless finite graph is covered by three even subgraphs. -/
+theorem exists_even_cover_three (G : SimpleGraph V) (hG : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e) :
+    ∃ H : Fin 3 → SimpleGraph V, ∃ _ : ∀ i, DecidableRel (H i).Adj,
+      (∀ i, H i ≤ G) ∧ (⨆ i, H i) = G ∧ ∀ i v, Even ((H i).degree v) := by
+  sorry
+
+/-- **Jaeger's 8-flow theorem.** Every finite bridgeless graph has a nowhere-zero integer
+8-flow. -/
+theorem jaeger_eight_flow (G : SimpleGraph V) [DecidableRel G.Adj]
+    (hG : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e) :
+    ∃ φ : G.Dart → ℤ, IsNowhereZeroFlow G 8 φ := by
+  sorry
+
+/-- A graph with a nowhere-zero `k`-flow has no bridge. -/
+theorem not_isBridge_of_flow (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} {φ : G.Dart → ℤ}
+    (hφ : IsNowhereZeroFlow G k φ) : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e := by
+  sorry
+
+end EightFlowTheorem

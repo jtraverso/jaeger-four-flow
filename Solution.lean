@@ -7,6 +7,7 @@ module
 
 public import Mathlib
 public import JaegerLib.Jaeger
+public import EightFlowLib.EightFlow
 
 /-!
 # Proofs of the statements in `Challenge.lean`
@@ -19,6 +20,13 @@ every vertex set of even size is the odd-degree set of a subgraph (a T-join); ta
 `H_i = (G \ T_i) Δ J_i` gives the even cover, and `φ = ψ₁ + 2ψ₂` from balanced orientations of
 `H₁, H₂` is the 4-flow. The definition `IsNowhereZeroFlow` below is the same as
 `Jaeger.IsNowhereZeroFlow` in the library.
+
+Jaeger's 8-flow theorem (version 2) is proved in `EightFlowLib/` (namespace `EightFlow`), on
+top of `JaegerLib/`, `TreePackingLib/` and `Euler/`: an induction on nowhere-zero `(ℤ₂)³`-flows
+that splits and contracts 2-edge cuts inside simple graphs, and a 3-edge-connected base case
+that applies the Nash-Williams–Tutte theorem to an auxiliary 6-edge-connected graph (each
+vertex replaced by a 7-clique, each edge doubled) to get three spanning trees with no common
+edge; the 8-flow is `φ₁ + 2φ₂ + 4φ₃` from Eulerian orientations of the three even subgraphs.
 -/
 
 @[expose] public section
@@ -60,3 +68,32 @@ theorem jaeger_four_flow (G : SimpleGraph V) [DecidableRel G.Adj] (hG : G.IsEdge
   Jaeger.jaeger_four_flow G hG
 
 end JaegerFlow
+
+/-! ### Jaeger's 8-flow theorem (version 2) -/
+
+namespace EightFlowTheorem
+
+open JaegerFlow
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+omit [DecidableEq V] in
+/-- A bridgeless finite graph is covered by three even subgraphs. -/
+theorem exists_even_cover_three (G : SimpleGraph V) (hG : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e) :
+    ∃ H : Fin 3 → SimpleGraph V, ∃ _ : ∀ i, DecidableRel (H i).Adj,
+      (∀ i, H i ≤ G) ∧ (⨆ i, H i) = G ∧ ∀ i v, Even ((H i).degree v) :=
+  EightFlow.exists_even_cover_three G hG
+
+/-- **Jaeger's 8-flow theorem.** Every finite bridgeless graph has a nowhere-zero integer
+8-flow. -/
+theorem jaeger_eight_flow (G : SimpleGraph V) [DecidableRel G.Adj]
+    (hG : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e) :
+    ∃ φ : G.Dart → ℤ, IsNowhereZeroFlow G 8 φ :=
+  EightFlow.jaeger_eight_flow G hG
+
+/-- A graph with a nowhere-zero `k`-flow has no bridge. -/
+theorem not_isBridge_of_flow (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} {φ : G.Dart → ℤ}
+    (hφ : IsNowhereZeroFlow G k φ) : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e :=
+  EightFlow.not_isBridge_of_flow G hφ
+
+end EightFlowTheorem

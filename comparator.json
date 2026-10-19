@@ -4,7 +4,10 @@
   "theorem_names": [
     "JaegerFlow.exists_even_cover_of_trees",
     "JaegerFlow.exists_flow_of_trees",
-    "JaegerFlow.jaeger_four_flow"
+    "JaegerFlow.jaeger_four_flow",
+    "EightFlowTheorem.exists_even_cover_three",
+    "EightFlowTheorem.jaeger_eight_flow",
+    "EightFlowTheorem.not_isBridge_of_flow"
   ],
   "definition_names": [],
   "permitted_axioms": [

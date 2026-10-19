@@ -1,4 +1,4 @@
-# Jaeger's 4-flow theorem in Lean 4
+# Jaeger's 4-flow and 8-flow theorems in Lean 4
 
 Author and maintainer: **Juan Pablo Traverso Gianini**. Licence: Apache-2.0 (see `LICENSE`).
 
@@ -15,14 +15,23 @@ statements are in the namespace `JaegerFlow`:
 3. `jaeger_four_flow`, **Jaeger's 4-flow theorem (1979)**. Every finite 4-edge-connected graph has
    a nowhere-zero integer 4-flow.
 
-4-edge-connectivity is Mathlib's `SimpleGraph.IsEdgeConnected 4`. Mathlib has no flows; Jaeger's
-8-flow theorem for bridgeless graphs is not part of this entry.
+4-edge-connectivity is Mathlib's `SimpleGraph.IsEdgeConnected 4`. Mathlib has no flows.
+
+**Version 2** adds Jaeger's 8-flow theorem, in the namespace `EightFlowTheorem`, for finite graphs
+with no bridge (every edge `e` satisfies `¬ G.IsBridge e`, Mathlib's `SimpleGraph.IsBridge`):
+
+4. `exists_even_cover_three`. The edges of a bridgeless graph are covered by three subgraphs in
+   which every vertex has even degree (a nowhere-zero `(ℤ₂)³`-flow).
+5. `jaeger_eight_flow`, **Jaeger's 8-flow theorem (Jaeger 1979; Kilpatrick 1975)**. Every finite
+   bridgeless graph has a nowhere-zero integer 8-flow.
+6. `not_isBridge_of_flow`. Conversely, a graph with a nowhere-zero `k`-flow has no bridge.
 
 ## Files
 
 - [`Challenge.lean`](Challenge.lean): the definition of nowhere-zero flows and the audited
   statements. It imports only Mathlib.
-- [`Solution.lean`](Solution.lean) and [`JaegerLib/`](JaegerLib): the proofs.
+- [`Solution.lean`](Solution.lean), [`JaegerLib/`](JaegerLib) and (version 2)
+  [`EightFlowLib/`](EightFlowLib): the proofs.
 - [`TreePackingLib/`](TreePackingLib): the Nash-Williams–Tutte tree packing theorem, reused
   unchanged from the registered entry
   [PALOMAR-2026-10-17-000008](https://palomar-registry.org/entry.html?id=PALOMAR-2026-10-17-000008&version=1)
@@ -31,8 +40,9 @@ statements are in the namespace `JaegerFlow`:
   the registered entry
   [PALOMAR-2026-10-16-000016](https://palomar-registry.org/entry.html?id=PALOMAR-2026-10-16-000016&version=1)
   ([jtraverso/euler-petersen](https://github.com/jtraverso/euler-petersen) @ 02c3f1a).
-- [`comparator.json`](comparator.json): the theorems that are compared (the comparator also checks
-  every definition their statements use, including `IsNowhereZeroFlow`).
+- [`comparator.json`](comparator.json): the theorems that are compared. It selects only the
+  theorems; the definition `IsNowhereZeroFlow` is not selected separately and enters the check only
+  as part of the theorem statements that use it.
 - [`MATHLIB_DEFINITIONS.md`](MATHLIB_DEFINITIONS.md): verbatim copies of the Mathlib definitions
   used.
 - [`formalization.yaml`](formalization.yaml): provenance, sources and process.
@@ -50,17 +60,36 @@ statements are in the namespace `JaegerFlow`:
   `φ = ψ₁ + 2ψ₂` takes values in `{±1, ±2, ±3}` on every dart.
 * **Jaeger.** A 4-edge-connected graph has two edge-disjoint spanning trees by the Nash-Williams–
   Tutte theorem (`TreePackingLib/`).
+* **8-flows** (version 2, `EightFlowLib/`).
+  - *Bridges.* Summing conservation over the side of a bridge leaves only the value on the
+    bridge, which is therefore zero.
+  - *Reduction.* By induction on the number of edges, for nowhere-zero `(ℤ₂)³`-flows, staying
+    inside simple graphs: even graphs are trivial; a cut whose crossing edges share an endpoint
+    splits the graph into two bridgeless pieces; in a 2-edge cut an edge `ab` without common
+    neighbours is contracted (the graph stays simple and bridgeless, and the flow lifts back); a
+    degree-2 vertex on a triangle is handled with a triangle flow. When none of these applies, the
+    graph is 3-edge-connected.
+  - *3-edge-connected base case.* An auxiliary graph on `V × Fin 7` (each vertex a 7-clique, each
+    edge doubled) is 6-edge-connected, so the Nash-Williams–Tutte theorem gives three
+    edge-disjoint spanning trees; projected to `G` they are connected spanning subgraphs with no
+    edge common to all three, and their cotrees extend to three even subgraphs covering `G` (as in
+    version 1).
+  - *Integer flow.* Balanced orientations of the three even subgraphs give `ψ₁, ψ₂, ψ₃` with
+    values in `{−1, 0, 1}`, and `φ = ψ₁ + 2ψ₂ + 4ψ₃` takes values in `{±1, …, ±7}`.
 
 ## Sources
 
 * F. Jaeger, *Flows and generalized coloring theorems in graphs*, J. Combin. Theory Ser. B 26
   (1979) 205–216, doi:10.1016/0095-8956(79)90057-1.
+* P. A. Kilpatrick, *Tutte's first colour-cycle conjecture*, Ph.D. thesis, University of Cape
+  Town (1975).
 
 ## Authorship and use of AI
 
 The author chose the result. The statements and proof plan were written with Claude in Claude
 Code (the statement was checked by brute force on all 4-edge-connected graphs with 5 to 7
-vertices). Harmonic's Aristotle produced the proofs, which were audited and rebuilt locally. Lean
+vertices). Harmonic's Aristotle produced the proofs (one run for each version), which were audited
+and rebuilt locally. Lean
 checks everything mechanically. See `formalization.yaml`.
 
 ## Building

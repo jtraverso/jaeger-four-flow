@@ -200,3 +200,26 @@ def IsEdgeReachable : Prop :=
 /-- A graph is `k`-edge-connected if any two vertices are `k`-edge-reachable. -/
 def IsEdgeConnected : Prop := ∀ u v, G.IsEdgeReachable k u v
 ```
+
+## SimpleGraph.deleteEdges
+
+`Mathlib/Combinatorics/SimpleGraph/DeleteEdges.lean`, line 46:
+
+```lean
+/-- Given a set of vertex pairs, remove all of the corresponding edges from the
+graph's edge set, if present.
+
+See also: `SimpleGraph.Subgraph.deleteEdges`. -/
+def deleteEdges (s : Set (Sym2 V)) : SimpleGraph V := G \ fromEdgeSet s
+```
+
+## SimpleGraph.IsBridge
+
+`Mathlib/Combinatorics/SimpleGraph/Connectivity/Connected.lean`, line 759:
+
+```lean
+/-- An edge of a graph is a *bridge* if without it, its incident vertices
+are not reachable from one another. -/
+def IsBridge (G : SimpleGraph V) (e : Sym2 V) : Prop :=
+  Sym2.lift ⟨fun v w ↦ ¬ (G.deleteEdges {e}).Reachable v w, by simp [reachable_comm]⟩ e
+```

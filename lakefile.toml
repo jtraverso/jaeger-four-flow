@@ -1,6 +1,6 @@
 name = "jaeger_flows"
 version = "0.1.0"
-defaultTargets = ["TreePackingLib", "Euler", "JaegerLib", "Challenge", "Solution"]
+defaultTargets = ["TreePackingLib", "Euler", "JaegerLib", "EightFlowLib", "Challenge", "Solution"]
 requiresModuleSystem = true
 
 [leanOptions]
@@ -23,6 +23,10 @@ globs = ["Euler.+"]
 [[lean_lib]]
 name = "JaegerLib"
 globs = ["JaegerLib.+"]
+
+[[lean_lib]]
+name = "EightFlowLib"
+globs = ["EightFlowLib.+"]
 
 [[lean_lib]]
 name = "Challenge"
