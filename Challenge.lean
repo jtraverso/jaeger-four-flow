@@ -40,8 +40,9 @@ Ser. B 26 (1979) 205–216.
 library) is an antisymmetric, nowhere-zero, conserved function on darts with values in an abelian
 group `A`.
 
-* `SixFlowTheorem.integer_flow_of_zmod`: **Tutte (1949).** For `k > 0`, a nowhere-zero
-  `ℤ/k`-flow lifts to a nowhere-zero integer `k`-flow.
+* `SixFlowTheorem.integer_flow_of_zmod`: **Tutte (1949).** For `k > 0`, every nowhere-zero
+  `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow `ψ` with `ψ ≡ φ (mod k)` on every
+  dart.
 * `SixFlowTheorem.zmod_flow_of_integer`: conversely, a nowhere-zero integer `k`-flow reduces to a
   nowhere-zero `ℤ/k`-flow.
 * `SixFlowTheorem.seymour_six_flow`: **Seymour's 6-flow theorem (1981).** Every finite
@@ -143,10 +144,11 @@ open SixFlow
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-/-- **Tutte (1949).** A nowhere-zero `ℤ/k`-flow lifts to a nowhere-zero integer `k`-flow. -/
+/-- **Tutte (1949).** Every nowhere-zero `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow
+`ψ` with `ψ ≡ φ (mod k)` on every dart. -/
 theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} (hk : 0 < k)
-    (h : ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ) :
-    ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ := by
+    (φ : G.Dart → ZMod k) (hφ : IsNowhereZeroGroupFlow G φ) :
+    ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ ∧ ∀ d, (ψ d : ZMod k) = φ d := by
   sorry
 
 /-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/

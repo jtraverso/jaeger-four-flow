@@ -17,8 +17,9 @@ For a finite simple graph `G`, a *nowhere-zero `A`-flow* (for an abelian group `
 antisymmetric function on the darts of `G` with no zero value that is conserved at every vertex
 (`SixFlow.IsNowhereZeroGroupFlow`). Integer `k`-flows are `Jaeger.IsNowhereZeroFlow G k`.
 
-* `SixFlow.integer_flow_of_zmod`: **Tutte's theorem (1949).** For `k > 0`, a nowhere-zero
-  `ℤ/k`-flow can be lifted to a nowhere-zero integer `k`-flow (values in `(−k, k) \ {0}`).
+* `SixFlow.integer_flow_of_zmod`: **Tutte's theorem (1949).** For `k > 0`, every nowhere-zero
+  `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow `ψ` (values in `(−k, k) \ {0}`) with
+  `ψ ≡ φ (mod k)`.
 * `SixFlow.zmod_flow_of_integer`: conversely, a nowhere-zero integer `k`-flow reduces to a
   nowhere-zero `ℤ/k`-flow.
 * `SixFlow.seymour_six_flow`: **Seymour's 6-flow theorem (1981).** Every finite bridgeless graph
@@ -40,11 +41,12 @@ def IsNowhereZeroGroupFlow {A : Type*} [AddCommGroup A] (G : SimpleGraph V) [Dec
   (∀ d, φ d.symm = -φ d) ∧ (∀ d, φ d ≠ 0) ∧
     ∀ v, ∑ d ∈ univ.filter (fun d : G.Dart ↦ d.fst = v), φ d = 0
 
-/-- **Tutte (1949).** A nowhere-zero `ℤ/k`-flow lifts to a nowhere-zero integer `k`-flow. -/
+/-- **Tutte (1949).** Every nowhere-zero `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow
+`ψ` with `ψ ≡ φ (mod k)` on every dart. -/
 theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} (hk : 0 < k)
-    (h : ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ) :
-    ∃ ψ : G.Dart → ℤ, Jaeger.IsNowhereZeroFlow G k ψ := by
-  obtain ⟨φ, ha, hn, hc⟩ := h
+    (φ : G.Dart → ZMod k) (hφ : IsNowhereZeroGroupFlow G φ) :
+    ∃ ψ : G.Dart → ℤ, Jaeger.IsNowhereZeroFlow G k ψ ∧ ∀ d, (ψ d : ZMod k) = φ d := by
+  obtain ⟨ha, hn, hc⟩ := hφ
   exact Tutte.lift hk φ ha hn hc
 
 /-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/
@@ -65,6 +67,7 @@ theorem seymour_six_flow (G : SimpleGraph V) [DecidableRel G.Adj]
     (hG : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e) :
     ∃ φ : G.Dart → ℤ, Jaeger.IsNowhereZeroFlow G 6 φ := by
   obtain ⟨φ, ha, hn, hc⟩ := Convert.exists_zmod6_flow hG
-  exact integer_flow_of_zmod G (k := 2 * 3) (by norm_num) ⟨φ, ha, hn, hc⟩
+  obtain ⟨ψ, hψ, -⟩ := integer_flow_of_zmod G (k := 2 * 3) (by norm_num) φ ⟨ha, hn, hc⟩
+  exact ⟨ψ, hψ⟩
 
 end SixFlow

@@ -225,8 +225,9 @@ lemma augment {k : ℕ} {φ : G.Dart → ZMod k} {ψ : G.Dart → ℤ} (hψ : Go
 `(−k, k)`. -/
 theorem lift {k : ℕ} (hk : 0 < k) (φ : G.Dart → ZMod k) (ha : ∀ d, φ d.symm = -φ d)
     (hn : ∀ d, φ d ≠ 0) (hc : ∀ v, ∑ d ∈ univ.filter (fun d : G.Dart ↦ d.fst = v), φ d = 0) :
-    ∃ ψ : G.Dart → ℤ, (∀ d, ψ d.symm = -ψ d) ∧ (∀ d, ψ d ≠ 0 ∧ |ψ d| < k) ∧
-      ∀ v, ∑ d ∈ univ.filter (fun d : G.Dart ↦ d.fst = v), ψ d = 0 := by
+    ∃ ψ : G.Dart → ℤ, ((∀ d, ψ d.symm = -ψ d) ∧ (∀ d, ψ d ≠ 0 ∧ |ψ d| < k) ∧
+      ∀ v, ∑ d ∈ univ.filter (fun d : G.Dart ↦ d.fst = v), ψ d = 0) ∧
+      ∀ d, (ψ d : ZMod k) = φ d := by
   have hex : ∃ n, ∃ ψ, Good k φ ψ ∧ pot ψ = n := by
     obtain ⟨ψ, hψ⟩ := exists_good hk φ ha
     exact ⟨_, ψ, hψ, rfl⟩
@@ -275,7 +276,7 @@ theorem lift {k : ℕ} (hk : 0 < k) (φ : G.Dart → ZMod k) (ha : ∀ d, φ d.s
           rw [hd']
           exact hpos
       omega
-  refine ⟨ψ, hψ.1, fun d => ⟨fun h0 => hn d ?_, hψ.2.2 d⟩, hzero⟩
+  refine ⟨ψ, ⟨hψ.1, fun d => ⟨fun h0 => hn d ?_, hψ.2.2 d⟩, hzero⟩, hψ.2.1⟩
   rw [← hψ.2.1 d, h0, Int.cast_zero]
 
 end Tutte

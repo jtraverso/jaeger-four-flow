@@ -12,8 +12,9 @@ project:
     every finite bridgeless graph has its edges covered by three even subgraphs and has a
     nowhere-zero integer 8-flow; conversely a graph with a nowhere-zero flow has no bridge. Version
     3 adds Seymour's 6-flow theorem (every finite bridgeless graph has a nowhere-zero integer
-    6-flow) and Tutte's theorem relating group and integer flows (for k > 0, a nowhere-zero
-    ℤ/k-flow lifts to a nowhere-zero integer k-flow, and conversely). Mathlib has no flows.
+    6-flow) and Tutte's theorem relating group and integer flows (for k > 0, every nowhere-zero
+    ℤ/k-flow φ lifts to a nowhere-zero integer k-flow ψ with ψ ≡ φ mod k, and conversely an integer
+    k-flow reduces to a ℤ/k-flow). Mathlib has no flows.
   authors:
     - "Juan Pablo Traverso Gianini"
   license: "Apache-2.0"
@@ -191,7 +192,7 @@ alignment:
       lean: "EightFlowTheorem.not_isBridge_of_flow"
       module: "Challenge"
       status: "proved"
-    - source: "Tutte (1954): nowhere-zero ℤ/k-flows lift to nowhere-zero integer k-flows"
+    - source: "Tutte (1954): every nowhere-zero ℤ/k-flow lifts to a congruent nowhere-zero integer k-flow"
       lean: "SixFlowTheorem.integer_flow_of_zmod"
       module: "Challenge"
       status: "proved"

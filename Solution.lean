@@ -115,11 +115,12 @@ open SixFlow
 
 variable {V : Type*} [Fintype V] [DecidableEq V]
 
-/-- **Tutte (1949).** A nowhere-zero `ℤ/k`-flow lifts to a nowhere-zero integer `k`-flow. -/
+/-- **Tutte (1949).** Every nowhere-zero `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow
+`ψ` with `ψ ≡ φ (mod k)` on every dart. -/
 theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} (hk : 0 < k)
-    (h : ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ) :
-    ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ :=
-  SixFlow.integer_flow_of_zmod G hk h
+    (φ : G.Dart → ZMod k) (hφ : IsNowhereZeroGroupFlow G φ) :
+    ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ ∧ ∀ d, (ψ d : ZMod k) = φ d :=
+  SixFlow.integer_flow_of_zmod G hk φ hφ
 
 /-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/
 theorem zmod_flow_of_integer (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ}
