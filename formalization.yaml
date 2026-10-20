@@ -14,7 +14,7 @@ project:
     3 adds Seymour's 6-flow theorem (every finite bridgeless graph has a nowhere-zero integer
     6-flow) and Tutte's theorem relating group and integer flows (for k > 0, every nowhere-zero
     ℤ/k-flow φ lifts to a nowhere-zero integer k-flow ψ with ψ ≡ φ mod k, and conversely an integer
-    k-flow reduces to a ℤ/k-flow). Mathlib has no flows.
+    k-flow reduces modulo k to a nowhere-zero ℤ/k-flow). Mathlib has no flows.
   authors:
     - "Juan Pablo Traverso Gianini"
   license: "Apache-2.0"
@@ -196,7 +196,7 @@ alignment:
       lean: "SixFlowTheorem.integer_flow_of_zmod"
       module: "Challenge"
       status: "proved"
-    - source: "Nowhere-zero integer k-flows reduce to nowhere-zero ℤ/k-flows"
+    - source: "The reduction modulo k of a nowhere-zero integer k-flow is a nowhere-zero ℤ/k-flow"
       lean: "SixFlowTheorem.zmod_flow_of_integer"
       module: "Challenge"
       status: "proved"

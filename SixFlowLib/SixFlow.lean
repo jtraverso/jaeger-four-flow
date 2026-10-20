@@ -20,8 +20,8 @@ antisymmetric function on the darts of `G` with no zero value that is conserved 
 * `SixFlow.integer_flow_of_zmod`: **Tutte's theorem (1949).** For `k > 0`, every nowhere-zero
   `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow `ψ` (values in `(−k, k) \ {0}`) with
   `ψ ≡ φ (mod k)`.
-* `SixFlow.zmod_flow_of_integer`: conversely, a nowhere-zero integer `k`-flow reduces to a
-  nowhere-zero `ℤ/k`-flow.
+* `SixFlow.zmod_flow_of_integer`: conversely, the reduction modulo `k` of a nowhere-zero integer
+  `k`-flow is a nowhere-zero `ℤ/k`-flow.
 * `SixFlow.seymour_six_flow`: **Seymour's 6-flow theorem (1981).** Every finite bridgeless graph
   has a nowhere-zero integer 6-flow.
 -/
@@ -49,12 +49,12 @@ theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} 
   obtain ⟨ha, hn, hc⟩ := hφ
   exact Tutte.lift hk φ ha hn hc
 
-/-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/
+/-- The reduction modulo `k` of a nowhere-zero integer `k`-flow is a nowhere-zero `ℤ/k`-flow. -/
 theorem zmod_flow_of_integer (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ}
-    (h : ∃ ψ : G.Dart → ℤ, Jaeger.IsNowhereZeroFlow G k ψ) :
-    ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ := by
-  obtain ⟨ψ, ha, hn, hc⟩ := h
-  refine ⟨fun d => (ψ d : ZMod k), fun d => by simp [ha], fun d => ?_, fun v => ?_⟩
+    (ψ : G.Dart → ℤ) (hψ : Jaeger.IsNowhereZeroFlow G k ψ) :
+    IsNowhereZeroGroupFlow G (fun d => (ψ d : ZMod k)) := by
+  obtain ⟨ha, hn, hc⟩ := hψ
+  refine ⟨fun d => by simp [ha], fun d => ?_, fun v => ?_⟩
   · intro h0
     rw [ZMod.intCast_zmod_eq_zero_iff_dvd] at h0
     exact (hn d).1 (Int.eq_zero_of_abs_lt_dvd h0 (hn d).2)

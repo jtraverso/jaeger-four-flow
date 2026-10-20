@@ -122,11 +122,11 @@ theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} 
     ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ ∧ ∀ d, (ψ d : ZMod k) = φ d :=
   SixFlow.integer_flow_of_zmod G hk φ hφ
 
-/-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/
+/-- The reduction modulo `k` of a nowhere-zero integer `k`-flow is a nowhere-zero `ℤ/k`-flow. -/
 theorem zmod_flow_of_integer (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ}
-    (h : ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ) :
-    ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ :=
-  SixFlow.zmod_flow_of_integer G h
+    (ψ : G.Dart → ℤ) (hψ : JaegerFlow.IsNowhereZeroFlow G k ψ) :
+    IsNowhereZeroGroupFlow G (fun d => (ψ d : ZMod k)) :=
+  SixFlow.zmod_flow_of_integer G ψ hψ
 
 /-- **Seymour's 6-flow theorem (1981).** Every finite bridgeless graph has a nowhere-zero integer
 6-flow. -/

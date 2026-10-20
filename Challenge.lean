@@ -43,8 +43,8 @@ group `A`.
 * `SixFlowTheorem.integer_flow_of_zmod`: **Tutte (1949).** For `k > 0`, every nowhere-zero
   `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow `ψ` with `ψ ≡ φ (mod k)` on every
   dart.
-* `SixFlowTheorem.zmod_flow_of_integer`: conversely, a nowhere-zero integer `k`-flow reduces to a
-  nowhere-zero `ℤ/k`-flow.
+* `SixFlowTheorem.zmod_flow_of_integer`: conversely, the reduction modulo `k` of a nowhere-zero
+  integer `k`-flow is a nowhere-zero `ℤ/k`-flow.
 * `SixFlowTheorem.seymour_six_flow`: **Seymour's 6-flow theorem (1981).** Every finite
   bridgeless graph has a nowhere-zero integer 6-flow.
 
@@ -151,10 +151,10 @@ theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} 
     ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ ∧ ∀ d, (ψ d : ZMod k) = φ d := by
   sorry
 
-/-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/
+/-- The reduction modulo `k` of a nowhere-zero integer `k`-flow is a nowhere-zero `ℤ/k`-flow. -/
 theorem zmod_flow_of_integer (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ}
-    (h : ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ) :
-    ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ := by
+    (ψ : G.Dart → ℤ) (hψ : JaegerFlow.IsNowhereZeroFlow G k ψ) :
+    IsNowhereZeroGroupFlow G (fun d => (ψ d : ZMod k)) := by
   sorry
 
 /-- **Seymour's 6-flow theorem (1981).** Every finite bridgeless graph has a nowhere-zero integer

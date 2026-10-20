@@ -32,8 +32,8 @@ in `Challenge.lean` verbatim with the same name as in the library):
 
 7. `integer_flow_of_zmod`, **Tutte's theorem (1949, 1954)**. For `k > 0`, every nowhere-zero
    `ℤ/k`-flow `φ` lifts to a nowhere-zero integer `k`-flow `ψ` with `ψ ≡ φ (mod k)` on every dart.
-8. `zmod_flow_of_integer`. Conversely, a nowhere-zero integer `k`-flow reduces to a nowhere-zero
-   `ℤ/k`-flow.
+8. `zmod_flow_of_integer`. Conversely, the reduction modulo `k` of a nowhere-zero integer
+   `k`-flow is a nowhere-zero `ℤ/k`-flow.
 9. `seymour_six_flow`, **Seymour's 6-flow theorem (1981)**. Every finite bridgeless graph has a
    nowhere-zero integer 6-flow.
 
