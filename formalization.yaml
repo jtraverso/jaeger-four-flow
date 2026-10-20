@@ -2,7 +2,7 @@
 version: "v0.4"
 
 project:
-  name: "Jaeger's 4-flow and 8-flow theorems"
+  name: "Jaeger's 4-flow and 8-flow theorems and Seymour's 6-flow theorem"
   description: >-
     A Lean 4 / Mathlib formalization of Jaeger's 4-flow theorem: every finite 4-edge-connected
     simple graph has a nowhere-zero integer 4-flow, i.e. an antisymmetric function on darts with
@@ -10,8 +10,10 @@ project:
     edge-disjoint spanning trees has its edges covered by two even subgraphs (a nowhere-zero
     ℤ₂ × ℤ₂-flow) and has a nowhere-zero integer 4-flow. Version 2 adds Jaeger's 8-flow theorem:
     every finite bridgeless graph has its edges covered by three even subgraphs and has a
-    nowhere-zero integer 8-flow; conversely a graph with a nowhere-zero flow has no bridge.
-    Mathlib has no flows.
+    nowhere-zero integer 8-flow; conversely a graph with a nowhere-zero flow has no bridge. Version
+    3 adds Seymour's 6-flow theorem (every finite bridgeless graph has a nowhere-zero integer
+    6-flow) and Tutte's theorem relating group and integer flows (for k > 0, a nowhere-zero
+    ℤ/k-flow lifts to a nowhere-zero integer k-flow, and conversely). Mathlib has no flows.
   authors:
     - "Juan Pablo Traverso Gianini"
   license: "Apache-2.0"
@@ -45,6 +47,27 @@ sources:
     license: "unknown"
     author_endorsement: "n/a"
 
+  - title: "Nowhere-zero 6-flows"
+    authors:
+      - "P. D. Seymour"
+    id: "doi:10.1016/0095-8956(81)90058-7"
+    type: "paper"
+    location: "Journal of Combinatorial Theory, Series B 30 (1981), 130–135"
+    relationship: "formalizes"
+    note: "Seymour's 6-flow theorem (version 3)."
+    license: "all rights reserved"
+    author_endorsement: "n/a"
+  - title: "A contribution to the theory of chromatic polynomials"
+    authors:
+      - "W. T. Tutte"
+    id: "doi:10.4153/CJM-1954-010-9"
+    type: "paper"
+    location: "Canadian Journal of Mathematics 6 (1954), 80–91"
+    relationship: "formalizes"
+    note: "Group-valued versus integer flows (version 3)."
+    license: "unknown"
+    author_endorsement: "n/a"
+
 related_formalizations:
   - id: "PALOMAR-2026-10-17-000008 (jtraverso/nash-williams-trees)"
     relationship: "builds-on"
@@ -61,8 +84,10 @@ related_formalizations:
 status:
   scope: >-
     Proved for every finite simple graph (vertex types in any universe): the 4-flow theorem under
-    4-edge-connectivity and the 8-flow theorem under the absence of bridges. Seymour's 6-flow
-    theorem and Tutte's 5-flow conjecture are not addressed.
+    4-edge-connectivity and the 8-flow theorem under the absence of bridges (versions 1 and 2);
+    Seymour's 6-flow theorem for every finite bridgeless graph and Tutte's group/integer flow
+    theorem for every k > 0 (version 3). Tutte's 5-flow, 4-flow and 3-flow conjectures are not
+    addressed.
   sorry_count: 0
   sorry_in_definitions: 0
   axioms: []
@@ -81,8 +106,11 @@ automation:
         2-edge cuts inside simple graphs, and a 3-edge-connected base case through an auxiliary
         6-edge-connected graph and tree packing; it replaced the suggested auxiliary graph, which
         does not work, by a better one).
+        For version 3, a third run proved Tutte's theorem and Seymour's 6-flow theorem with its
+        own internal multigraph model (greedy Seymour step, 2-edge-cut contraction, Chinese
+        remainder conversion), leaving the earlier libraries unchanged.
       cost:
-        wall_time: "about three hours in total"
+        wall_time: "about four hours in total"
         spend_usd: "not tracked"
         hardware: "API-only"
       prompting_notes: "Formal statements and proof plan supplied."
@@ -116,7 +144,10 @@ fidelity:
     empty or one-vertex graph the conclusions hold trivially. Edge-disjointness of the trees is
     `Disjoint T₁ T₂` in the lattice of simple graphs. Bridgeless means that no edge of G satisfies
     Mathlib's `SimpleGraph.IsBridge` (graphs may be disconnected). The three even subgraphs of the
-    8-flow statement are indexed by `Fin 3` and cover G as `⨆ i, H i = G`.
+    8-flow statement are indexed by `Fin 3` and cover G as `⨆ i, H i = G`. Group flows
+    (version 3) take values in an arbitrary abelian group and are stated, like integer flows, on
+    darts (antisymmetric, nonzero on every dart, conserved at every vertex); `ZMod k` is Mathlib's
+    integers modulo k, and Tutte's lifting theorem assumes k > 0.
 
 review:
   status: "agent-reviewed"
@@ -158,6 +189,18 @@ alignment:
       status: "proved"
     - source: "A graph with a nowhere-zero flow has no bridge"
       lean: "EightFlowTheorem.not_isBridge_of_flow"
+      module: "Challenge"
+      status: "proved"
+    - source: "Tutte (1954): nowhere-zero ℤ/k-flows lift to nowhere-zero integer k-flows"
+      lean: "SixFlowTheorem.integer_flow_of_zmod"
+      module: "Challenge"
+      status: "proved"
+    - source: "Nowhere-zero integer k-flows reduce to nowhere-zero ℤ/k-flows"
+      lean: "SixFlowTheorem.zmod_flow_of_integer"
+      module: "Challenge"
+      status: "proved"
+    - source: "Seymour (1981): every bridgeless graph has a nowhere-zero 6-flow"
+      lean: "SixFlowTheorem.seymour_six_flow"
       module: "Challenge"
       status: "proved"
 

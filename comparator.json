@@ -7,7 +7,10 @@
     "JaegerFlow.jaeger_four_flow",
     "EightFlowTheorem.exists_even_cover_three",
     "EightFlowTheorem.jaeger_eight_flow",
-    "EightFlowTheorem.not_isBridge_of_flow"
+    "EightFlowTheorem.not_isBridge_of_flow",
+    "SixFlowTheorem.integer_flow_of_zmod",
+    "SixFlowTheorem.zmod_flow_of_integer",
+    "SixFlowTheorem.seymour_six_flow"
   ],
   "definition_names": [],
   "permitted_axioms": [

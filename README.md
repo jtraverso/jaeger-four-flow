@@ -1,4 +1,4 @@
-# Jaeger's 4-flow and 8-flow theorems in Lean 4
+# Jaeger's 4-flow and 8-flow theorems and Seymour's 6-flow theorem in Lean 4
 
 Author and maintainer: **Juan Pablo Traverso Gianini**. Licence: Apache-2.0 (see `LICENSE`).
 
@@ -26,12 +26,23 @@ with no bridge (every edge `e` satisfies `¬ G.IsBridge e`, Mathlib's `SimpleGra
    bridgeless graph has a nowhere-zero integer 8-flow.
 6. `not_isBridge_of_flow`. Conversely, a graph with a nowhere-zero `k`-flow has no bridge.
 
+**Version 3** adds, in the namespace `SixFlowTheorem`, group flows (`SixFlow.IsNowhereZeroGroupFlow`:
+antisymmetric, nowhere-zero, conserved functions on darts with values in an abelian group, stated
+in `Challenge.lean` verbatim with the same name as in the library):
+
+7. `integer_flow_of_zmod`, **Tutte's theorem (1949, 1954)**. For `k > 0`, a nowhere-zero
+   `ℤ/k`-flow lifts to a nowhere-zero integer `k`-flow.
+8. `zmod_flow_of_integer`. Conversely, a nowhere-zero integer `k`-flow reduces to a nowhere-zero
+   `ℤ/k`-flow.
+9. `seymour_six_flow`, **Seymour's 6-flow theorem (1981)**. Every finite bridgeless graph has a
+   nowhere-zero integer 6-flow.
+
 ## Files
 
 - [`Challenge.lean`](Challenge.lean): the definition of nowhere-zero flows and the audited
   statements. It imports only Mathlib.
-- [`Solution.lean`](Solution.lean), [`JaegerLib/`](JaegerLib) and (version 2)
-  [`EightFlowLib/`](EightFlowLib): the proofs.
+- [`Solution.lean`](Solution.lean), [`JaegerLib/`](JaegerLib), (version 2)
+  [`EightFlowLib/`](EightFlowLib) and (version 3) [`SixFlowLib/`](SixFlowLib): the proofs.
 - [`TreePackingLib/`](TreePackingLib): the Nash-Williams–Tutte tree packing theorem, reused
   unchanged from the registered entry
   [PALOMAR-2026-10-17-000008](https://palomar-registry.org/entry.html?id=PALOMAR-2026-10-17-000008&version=1)
@@ -41,8 +52,8 @@ with no bridge (every edge `e` satisfies `¬ G.IsBridge e`, Mathlib's `SimpleGra
   [PALOMAR-2026-10-16-000016](https://palomar-registry.org/entry.html?id=PALOMAR-2026-10-16-000016&version=1)
   ([jtraverso/euler-petersen](https://github.com/jtraverso/euler-petersen) @ 02c3f1a).
 - [`comparator.json`](comparator.json): the theorems that are compared. It selects only the
-  theorems; the definition `IsNowhereZeroFlow` is not selected separately and enters the check only
-  as part of the theorem statements that use it.
+  theorems; the definitions `IsNowhereZeroFlow` and `IsNowhereZeroGroupFlow` are not selected
+  separately and enter the check only as part of the theorem statements that use them.
 - [`MATHLIB_DEFINITIONS.md`](MATHLIB_DEFINITIONS.md): verbatim copies of the Mathlib definitions
   used.
 - [`formalization.yaml`](formalization.yaml): provenance, sources and process.
@@ -76,6 +87,20 @@ with no bridge (every edge `e` satisfies `¬ G.IsBridge e`, Mathlib's `SimpleGra
     version 1).
   - *Integer flow.* Balanced orientations of the three even subgraphs give `ψ₁, ψ₂, ψ₃` with
     values in `{−1, 0, 1}`, and `φ = ψ₁ + 2ψ₂ + 4ψ₃` takes values in `{±1, …, ±7}`.
+* **Tutte's theorem** (version 3, `SixFlowLib/SixFlowTutte.lean`). Among the antisymmetric integer
+  lifts of a `ℤ/k`-flow with values in `(−k, k)`, take one minimising the total vertex excess (each
+  excess is a multiple of `k`). If some vertex has positive excess, either it reaches a vertex of
+  negative excess along darts with positive value, and shifting by `k` along that path lowers the
+  total excess, or summing the excesses over the reachable set gives a contradiction.
+* **Seymour's 6-flow theorem** (version 3, `SixFlowLib/`). The proof works with an internal
+  multigraph model (`SixFlowMG.lean`). An ear argument puts any two vertices of a bridgeless piece
+  on a common connected even subgraph (`SixFlowClaimB.lean`). Seymour's greedy step
+  (`SixFlowGreedy.lean`) grows a vertex set `U` and an even edge set `F` inside it such that every
+  `ℤ/3`-demand on `U` is met by a function nonzero off `F`, attaching a minimal leaf piece through
+  two edges; when every cut has at least three edges this gives a nowhere-zero `ℤ/2 × ℤ/3`-flow.
+  An induction on the number of edges splits empty cuts and contracts one edge of each 2-edge cut
+  (`SixFlowReduce.lean`). The flow is converted to darts, to `ℤ/6` by the Chinese remainder
+  theorem, and to an integer 6-flow by Tutte's theorem (`SixFlowConvert.lean`).
 
 ## Sources
 
@@ -83,6 +108,10 @@ with no bridge (every edge `e` satisfies `¬ G.IsBridge e`, Mathlib's `SimpleGra
   (1979) 205–216, doi:10.1016/0095-8956(79)90057-1.
 * P. A. Kilpatrick, *Tutte's first colour-cycle conjecture*, Ph.D. thesis, University of Cape
   Town (1975).
+* P. D. Seymour, *Nowhere-zero 6-flows*, J. Combin. Theory Ser. B 30 (1981) 130–135,
+  doi:10.1016/0095-8956(81)90058-7.
+* W. T. Tutte, *A contribution to the theory of chromatic polynomials*, Canad. J. Math. 6 (1954)
+  80–91, doi:10.4153/CJM-1954-010-9.
 
 ## Authorship and use of AI
 

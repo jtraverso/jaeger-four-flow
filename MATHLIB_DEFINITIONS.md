@@ -223,3 +223,15 @@ are not reachable from one another. -/
 def IsBridge (G : SimpleGraph V) (e : Sym2 V) : Prop :=
   Sym2.lift ⟨fun v w ↦ ¬ (G.deleteEdges {e}).Reachable v w, by simp [reachable_comm]⟩ e
 ```
+
+## ZMod
+
+`Mathlib/Data/ZMod/Defs.lean`, line 139:
+
+```lean
+/-- The integers modulo `n : ℕ`. -/
+@[to_additive_dont_translate]
+def ZMod : ℕ → Type
+  | 0 => ℤ
+  | n + 1 => Fin (n + 1)
+```

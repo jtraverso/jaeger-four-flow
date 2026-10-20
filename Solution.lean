@@ -8,6 +8,7 @@ module
 public import Mathlib
 public import JaegerLib.Jaeger
 public import EightFlowLib.EightFlow
+public import SixFlowLib.SixFlow
 
 /-!
 # Proofs of the statements in `Challenge.lean`
@@ -27,6 +28,14 @@ that splits and contracts 2-edge cuts inside simple graphs, and a 3-edge-connect
 that applies the Nash-Williams–Tutte theorem to an auxiliary 6-edge-connected graph (each
 vertex replaced by a 7-clique, each edge doubled) to get three spanning trees with no common
 edge; the 8-flow is `φ₁ + 2φ₂ + 4φ₃` from Eulerian orientations of the three even subgraphs.
+
+Tutte's theorem and Seymour's 6-flow theorem (version 3) are proved in `SixFlowLib/`
+(namespace `SixFlow`): the integer lift minimises the total vertex excess and corrects it
+by multiples of `k` along paths; the 6-flow is obtained as a nowhere-zero
+`ℤ/2 × ℤ/3`-flow by Seymour's greedy construction on an internal multigraph model, after
+splitting empty cuts and contracting one edge of each 2-edge cut, and is converted with the
+Chinese remainder theorem and Tutte's theorem. The definition `IsNowhereZeroGroupFlow` is the
+library's own and is reproduced verbatim in `Challenge.lean`.
 -/
 
 @[expose] public section
@@ -97,3 +106,32 @@ theorem not_isBridge_of_flow (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} 
   EightFlow.not_isBridge_of_flow G hφ
 
 end EightFlowTheorem
+
+/-! ### Tutte's group-to-integer theorem and Seymour's 6-flow theorem (version 3) -/
+
+namespace SixFlowTheorem
+
+open SixFlow
+
+variable {V : Type*} [Fintype V] [DecidableEq V]
+
+/-- **Tutte (1949).** A nowhere-zero `ℤ/k`-flow lifts to a nowhere-zero integer `k`-flow. -/
+theorem integer_flow_of_zmod (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ} (hk : 0 < k)
+    (h : ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ) :
+    ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ :=
+  SixFlow.integer_flow_of_zmod G hk h
+
+/-- A nowhere-zero integer `k`-flow reduces modulo `k` to a nowhere-zero `ℤ/k`-flow. -/
+theorem zmod_flow_of_integer (G : SimpleGraph V) [DecidableRel G.Adj] {k : ℕ}
+    (h : ∃ ψ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G k ψ) :
+    ∃ φ : G.Dart → ZMod k, IsNowhereZeroGroupFlow G φ :=
+  SixFlow.zmod_flow_of_integer G h
+
+/-- **Seymour's 6-flow theorem (1981).** Every finite bridgeless graph has a nowhere-zero integer
+6-flow. -/
+theorem seymour_six_flow (G : SimpleGraph V) [DecidableRel G.Adj]
+    (hG : ∀ e ∈ G.edgeSet, ¬ G.IsBridge e) :
+    ∃ φ : G.Dart → ℤ, JaegerFlow.IsNowhereZeroFlow G 6 φ :=
+  SixFlow.seymour_six_flow G hG
+
+end SixFlowTheorem
